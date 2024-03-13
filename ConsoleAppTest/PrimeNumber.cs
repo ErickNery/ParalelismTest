@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace Erick.Prime{
 
@@ -19,19 +20,42 @@ namespace Erick.Prime{
     }
 
     public async static Task<int> PrimeNumberQuantityGetAssync(long number){
+
         if(number < 2) return 0;
-        var PrimeNumberQtd = 0;
-      
-        for (int i = 2; i <= number; i++)
+        Int64 remainder = 0;
+        var numberFractionated = Math.DivRem(Int64.Parse(number.ToString()), 4,out remainder);
+
+        //Console.WriteLine(numberFractionated-1);
+        //Console.WriteLine(numberFractionated*2-1);
+        //Console.WriteLine(numberFractionated*3-1);
+        //Console.WriteLine(numberFractionated*4);
+
+
+        var primeNumbersList = new List<Task<int>>
         {
-            await Task.Run( async () => 
-            {
-                if(await Task.Run(() => IsPrime(i))) {
-                    PrimeNumberQtd++;
-                }
-            } );
+            Task.Run(() => PrimeNumberQuantityGetAssyncRange(2, numberFractionated - 1)),
+            Task.Run(() => PrimeNumberQuantityGetAssyncRange(numberFractionated/2, numberFractionated*2-1)),
+            Task.Run(() => PrimeNumberQuantityGetAssyncRange(numberFractionated*2, numberFractionated*3-1)),
+            Task.Run(() => PrimeNumberQuantityGetAssyncRange(numberFractionated*2, numberFractionated*4)),
+            Task.Run(() => PrimeNumberQuantityGetAssyncRange(numberFractionated*4, numberFractionated*4+remainder))
+        };
+
+        int[] resultList = await Task.WhenAll(primeNumbersList);
+        return resultList.Sum();
+    }
+
+    public static int PrimeNumberQuantityGetAssyncRange(long start,long limit){
+        int counter = 0; 
+        for (long i = start; i <= limit; i++)
+        {
+            if(IsPrime(i)) counter++;
         }
-        return PrimeNumberQtd;
+        return counter;
+    }
+
+    private static async Task IsPrimeAssync(long number, int counter){
+        if(IsPrime(number)) counter++;
+        return;
     }
 
     public static int PrimeNumberQuantityGetParallel(long number){

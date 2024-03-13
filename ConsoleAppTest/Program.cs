@@ -14,7 +14,7 @@ static async Task Main()
     Stopwatch stopWatch = new Stopwatch();
     stopWatch.Start();
     long number = 1000000; int result = 0; int option;
-    
+
     Console.WriteLine("Choose method to process");
     Console.WriteLine(" 1 - Syncronous task");
     Console.WriteLine(" 2 - Assyncronous task");
@@ -33,7 +33,8 @@ static async Task Main()
             Console.WriteLine($"Until {number} there are {PrimeNumber.PrimeNumberQuantityGet(number)}  numbers");
             break;
         case  2:
-            Console.WriteLine($"Until {number} there are {PrimeNumber.PrimeNumberQuantityGetAssync(number).Result}  numbers");
+            result = await PrimeNumber.PrimeNumberQuantityGetAssync(number);
+            Console.WriteLine($"Until {number} there are {result}  numbers");
             break;
         case  3:
             Console.WriteLine($"Until {number} there are {PrimeNumber.PrimeNumberQuantityGetParallel(number)}  numbers");
