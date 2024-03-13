@@ -4,12 +4,24 @@ namespace Erick.Prime{
 
   public class PrimeNumber{
 
-    public static int PrimeNumberQuantity(long number){
+    public static int PrimeNumberQuantityGet(long number){
         if(number < 2) return 0;
         var PrimeNumberQtd = 0;
         
-        //with task
-        /*
+        for (int i = 2; i <= number; i++)
+        {
+            if(IsPrime(i)) {
+                PrimeNumberQtd++;
+            }
+        }
+
+        return PrimeNumberQtd;
+    }
+
+    public async static Task<int> PrimeNumberQuantityGetAssync(long number){
+        if(number < 2) return 0;
+        var PrimeNumberQtd = 0;
+      
         for (int i = 2; i <= number; i++)
         {
             await Task.Run( async () => 
@@ -18,25 +30,20 @@ namespace Erick.Prime{
                     PrimeNumberQtd++;
                 }
             } );
+        }
+        return PrimeNumberQtd;
+    }
 
-        }*/
+    public static int PrimeNumberQuantityGetParallel(long number){
+        if(number < 2) return 0;
+        var PrimeNumberQtd = 0;
 
-
-        //parallel for
         Parallel.For(2, number, i =>
         {
             if(IsPrime(i)) {
                 PrimeNumberQtd++;
             }            
         });
-
-        //Single thread
-        /*for (int i = 2; i <= number; i++)
-        {
-            if(IsPrime(i)) {
-                PrimeNumberQtd++;
-            }
-        }*/
         return PrimeNumberQtd;
     }
 
